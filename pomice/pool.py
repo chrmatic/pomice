@@ -113,7 +113,7 @@ class Node:
         self,
         *,
         pool: Type[NodePool],
-        bot: commands.Bot,
+        bot: commands.Bot | commands.AutoShardedBot,
         host: str,
         port: int,
         password: str,
@@ -134,7 +134,7 @@ class Node:
         if not isinstance(port, int):
             raise TypeError("Port must be an integer")
 
-        self._bot: commands.Bot = bot
+        self._bot: commands.Bot | commands.AutoShardedBot = bot
         self._host: str = host
         self._port: int = port
         self._pool: Type[NodePool] = pool
@@ -1052,7 +1052,7 @@ class NodePool:
     async def create_node(
         cls,
         *,
-        bot: commands.Bot,
+        bot: commands.Bot | commands.AutoShardedBot,
         host: str,
         port: int,
         password: str,
