@@ -980,7 +980,10 @@ class NodePool:
 
     @classmethod
     def get_best_node(
-        cls, *, algorithm: NodeAlgorithm, channel: Optional[VoiceChannel] = None,
+        cls,
+        *,
+        algorithm: NodeAlgorithm,
+        channel: Optional[VoiceChannel] = None,
     ) -> Node:
         """Fetches the best node based on an NodeAlgorithm.
         This option is preferred if you want to choose the best node
@@ -1017,7 +1020,8 @@ class NodePool:
                 return cls.get_best_node(algorithm=NodeAlgorithm.by_ping)
 
             if node := next(
-                (node for node in available_nodes if node.location == chosen_region), None,
+                (node for node in available_nodes if node.location == chosen_region),
+                None,
             ):
                 return node
 

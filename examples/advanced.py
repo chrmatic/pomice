@@ -5,7 +5,6 @@ This is in the form of a drop-in cog you can use and modify to your liking.
 This example aims to include everything you would need to make a fully functioning music bot,
 from a queue system, advanced queue control and more.
 """
-
 import math
 from contextlib import suppress
 
