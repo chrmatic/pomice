@@ -31,13 +31,7 @@ from websockets import exceptions
 from . import __version__
 from . import applemusic
 from . import spotify
-from .enums import (
-    TrackType,
-    NodeAlgorithm,
-    PlaylistType,
-    SearchType,
-    URLRegex
-)
+from .enums import TrackType, NodeAlgorithm, PlaylistType, SearchType, URLRegex
 from .exceptions import InvalidSpotifyClientAuthorization
 from .exceptions import LavalinkVersionIncompatible
 from .exceptions import NodeConnectionFailure
@@ -145,7 +139,7 @@ class Node:
         self._resume_timeout: int = resume_timeout
         self._secure: bool = secure
         self._fallback: bool = fallback
-        
+
         self._location = location
 
         self._websocket_uri: str = f"{'wss' if self._secure else 'ws'}://{self._host}:{self._port}"
@@ -218,13 +212,13 @@ class Node:
     def bot(self) -> Client:
         """Property which returns the discord.py client linked to this node"""
         return self._bot
-        
+
     @property
     def location(self) -> str:
         """
         Property which returns the default region unless set specifically
         """
-        
+
         return self._location
 
     @property
@@ -984,7 +978,9 @@ class NodePool:
         return len(self._nodes.values())
 
     @classmethod
-    def get_best_node(cls, *, algorithm: NodeAlgorithm, channel: Optional[VoiceChannel] = None) -> Node:
+    def get_best_node(
+        cls, *, algorithm: NodeAlgorithm, channel: Optional[VoiceChannel] = None
+    ) -> Node:
         """Fetches the best node based on an NodeAlgorithm.
         This option is preferred if you want to choose the best node
         from a multi-node setup using either the node's latency
@@ -998,7 +994,7 @@ class NodePool:
         based on how players it has. This method will return a node with
         the least amount of players
         """
-        
+
         available_nodes: List[Node] = [node for node in cls._nodes.values() if node._available]
 
         if not available_nodes:
@@ -1011,20 +1007,19 @@ class NodePool:
         elif algorithm == NodeAlgorithm.by_players:
             tested_nodes = {node: len(node.players.keys()) for node in available_nodes}
             return min(tested_nodes, key=tested_nodes.get)  # type: ignore
-        
+
         elif algorithm == NodeAlgorithm.by_location and isinstance(channel, VoiceChannel):
-            tested_nodes = {} 
+            tested_nodes = {}
             chosen_region = channel.rtc_region
-            
+
             if not chosen_region:
                 return cls.get_best_node(algorithm=NodeAlgorithm.by_ping)
-                
-            if (node := next(
-                (node for node in available_nodes if node.location == chosen_region),
-                None
-            )):
+
+            if node := next(
+                (node for node in available_nodes if node.location == chosen_region), None
+            ):
                 return node
-            
+
             return random.choice(available_nodes)
         else:
             raise ValueError(
